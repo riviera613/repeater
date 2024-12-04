@@ -1,14 +1,14 @@
 # Repeater
-A simple stress test framework for Golang
+一个简单的Golang语言压力测试框架
 
-English | [中文](README_ZH.md)
+[English](README.md) | 中文
 
-## Install
+## 安装
 ```powershell
 go get -u riviera613/reapter
 ```
 
-## How to use
+## 如何使用
 ```go
 package main
 
@@ -20,8 +20,8 @@ import (
 	"time"
 )
 
-// ForTest a function for test, generate a random integer N between 0 and 1024
-// if N > 1000, return error; otherwise, sleep N ms
+// ForTest 一个用于测试的方法，在0-1024之间生成随机数
+// 如果结果大于1000，就认为是报错；否则就延迟对应的毫秒数
 func ForTest() error {
 	n := time.Duration(rand.Intn(1024))
 	if n > 1000 {
@@ -41,12 +41,12 @@ func main() {
 		{Concurrence: 100, TotalCount: 500},
 	})
 	_repeater.Process()
-	fmt.Println(_repeater.Render())   // output result to terminal
-	_ = _repeater.ToCsv("result.csv") // output result to csv
+	fmt.Println(_repeater.Render())   // 输出结果到控制台
+	_ = _repeater.ToCsv("result.csv") // 输出结果到指定csv文件
 }
 ```
 
-## Output
+## 输出示例
 ```powershell
 +---------+-------------+-------------+---------------+--------------+----------+--------------------+----------+----------+
 | NAME    | CONCURRENCE | TOTAL COUNT | SUCCESS COUNT | SUCCESS RATE |    TOTAL |                AVG |      P95 |      P99 |
