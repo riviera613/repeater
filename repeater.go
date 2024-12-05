@@ -15,7 +15,7 @@ type Repeater struct {
 func (r *Repeater) Init(inputFuncList []*InputFunc, inputParamList []*InputParam) {
 	r.TestCases = make([]*TestCase, 0)
 	for _, inputFunc := range inputFuncList {
-		if inputFunc.Name == "" {
+		if inputFunc.Name == "" || inputFunc.Func == nil {
 			log.Printf("Invalid input func: %v", inputFunc)
 			continue
 		}
