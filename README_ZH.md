@@ -5,7 +5,7 @@
 
 ## 安装
 ```powershell
-go get -u github.com/riviera613/reapter
+go get -u github.com/riviera613/repeater
 ```
 
 ## 如何使用
