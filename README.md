@@ -5,7 +5,7 @@ English | [中文](README_ZH.md)
 
 ## Install
 ```powershell
-go get -u riviera613/reapter
+go get -u github.com/riviera613/reapter
 ```
 
 ## How to use
