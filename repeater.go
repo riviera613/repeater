@@ -3,17 +3,20 @@ package repeater
 import (
 	"fmt"
 	"github.com/jedib0t/go-pretty/table"
+	"github.com/schollz/progressbar/v3"
 	"log"
 	"os"
 )
 
 type Repeater struct {
 	TestCases []*TestCase
+	Bar       *progressbar.ProgressBar
 }
 
 // Init init
 func (r *Repeater) Init(inputFuncList []*InputFunc, inputParamList []*InputParam) {
 	r.TestCases = make([]*TestCase, 0)
+	count := int64(0)
 	for _, inputFunc := range inputFuncList {
 		if inputFunc.Name == "" || inputFunc.Func == nil {
 			log.Printf("Invalid input func: %v", inputFunc)
@@ -27,14 +30,16 @@ func (r *Repeater) Init(inputFuncList []*InputFunc, inputParamList []*InputParam
 			testCase := &TestCase{}
 			testCase.Init(inputFunc, inputParam)
 			r.TestCases = append(r.TestCases, testCase)
+			count += testCase.TotalCount
 		}
 	}
+	r.Bar = progressbar.Default(count)
 }
 
 // Process run all test cases
 func (r *Repeater) Process() {
 	for _, testCase := range r.TestCases {
-		testCase.Process()
+		testCase.Process(r.Bar)
 	}
 }
 

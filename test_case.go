@@ -2,6 +2,7 @@ package repeater
 
 import (
 	"github.com/panjf2000/ants/v2"
+	"github.com/schollz/progressbar/v3"
 	"log"
 	"math"
 	"sort"
@@ -32,7 +33,7 @@ func (c *TestCase) Init(inputFunc *InputFunc, inputParam *InputParam) {
 }
 
 // Process run stress test, and save result
-func (c *TestCase) Process() {
+func (c *TestCase) Process(bar *progressbar.ProgressBar) {
 	defer ants.Release()
 	c.IsFinish = true
 	log.Printf("[%s] Start", c.Name)
@@ -41,7 +42,7 @@ func (c *TestCase) Process() {
 	pool, _ := ants.NewPool(int(c.Concurrence))
 	start := time.Now().UnixNano()
 	for i := 0; i < int(c.TotalCount); i++ {
-		if err := pool.Submit(c.testWrapper(ch)); err != nil {
+		if err := pool.Submit(c.testWrapper(ch, bar)); err != nil {
 			log.Printf("[%s] Submit task error: %s", c.Name, err.Error())
 		}
 	}
@@ -54,7 +55,7 @@ func (c *TestCase) Process() {
 	c.IsFinish = true
 }
 
-func (c *TestCase) testWrapper(ch chan float64) func() {
+func (c *TestCase) testWrapper(ch chan float64, bar *progressbar.ProgressBar) func() {
 	return func() {
 		duration := float64(-1)
 		defer func() {
@@ -62,6 +63,7 @@ func (c *TestCase) testWrapper(ch chan float64) func() {
 				log.Printf("[%s] Test recover from panic", c.Name)
 			}
 			ch <- duration
+			_ = bar.Add(1)
 		}()
 
 		start := time.Now().UnixNano()
